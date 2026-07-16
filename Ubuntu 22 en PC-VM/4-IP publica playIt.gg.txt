@@ -1,0 +1,46 @@
+1- Crear cuenta en playit.gg
+2- Descargar el agente.
+3- Crear un tunnel asignandole un nombre, tipo de tunnel, tipo de network y finalmente asociar ese tunnel al agente.
+4- Una vez creado, en la pestaña tunnel veremos nuestra ip publica.
+5- En Origin Summary en el apartado Configuration debemos darle 'edit'.
+6- Local IP debe ser la IPv4 de nuestra máquina ubuntu y Local Port debe ser el mismo que pusiste en el archivo srcds1
+Al hacer esto las conexiones entrantes usarán la maquina(ip) con la aplicacion que este usando ese puerto(27015 u otro).
+
+**RECOMENDADO
+Cuando playit.gg te brinde una ip publica como 147.185.221.225:9924 , deberás usar ese puerto(9924) en el archivo 'srcds1' y en la configuración del tunnel.
+Esto es porque si en el archivo srcds1 usas un puerto diferente al de la ip publica(9924), al añadir la ip publica 147.185.221.225:9924 a la pestaña de favoritos en el juego, a pesar que el browser de servidores lo reconozca no vas a poder entrar desde ahi ya que como el srcds esta usando el puerto 2015, este devolverá algo como 147.185.221.225:27015 lo cual ese puerto(27015) no existe en la IP publica de playit causando así que no puedas ingresar al servidor desde ahí y sólo puedas ingresar mediante la consola del juego ejecutando connect 147.185.221.225:9924 (especificando el puerto correcto).
+
+
+**************************** COMO FUNCIONA PLAYIT.GG?***********************
+Para entender Playit.gg, imagínate que tu máquina virtual (donde está tu servidor de Left 4 Dead 2) está dentro de una habitación cerrada con llave en un edificio gigante (tu red local de internet). Nadie desde la calle puede entrar ni ver qué hay ahí.
+
+Aquí es donde entran los dos conceptos clave: el Agente y el Túnel. Trabajan en equipo como un servicio de mensajería privado.
+
+1- El Agente (El "Mensajero")
+El Agente es el programa que te descargaste y que abres en tu Windows (el archivo .exe de Playit).
+
+¿Qué hace? Funciona como un mensajero que se para justo en la puerta de esa habitación cerrada. Su único trabajo es estar atento.
+
+¿Cómo trabaja? Abre una conexión directa y segura desde tu computadora hacia los servidores de Playit en internet. Como la conexión la inicia tu propia PC (hacia afuera), tu router de internet no la bloquea.
+
+Su rol local: Se encarga de recibir las cosas que vienen de internet y pasárselas directamente a tu máquina virtual en la IP privada (192.168.18.94) y puerto (9924).
+
+2- El Túnel (El "Camino Privado")
+El Túnel no es un programa, sino la ruta o el puente virtual que creas en la página web de Playit.
+
+¿Qué hace? Es el camino que une el servidor público de Playit en internet con el Agente que corre en tu PC.
+
+La IP Pública: Al crear el túnel, Playit te regala una dirección pública única (por ejemplo: nombre-key-7bbf.ply.gg o una IP con un puerto asignado). Esa es la dirección que le vas a pasar a tus amigos para que jueguen.
+
+El Enrutamiento: Cuando un amigo pone esa dirección en su juego, sus datos viajan a los servidores de Playit en Sudamérica (Santiago de Chile). Playit ve los datos, sabe que te pertenecen, los mete por ese "túnel" directo hacia tu casa, el Agente los recibe en tu Windows y se los entrega al instante a tu servidor en Ubuntu.
+
+En resumen, para que quede clarísimo:
+🌐 El Túnel: Es la dirección pública de internet (.ply.gg) y el puente virtual por donde viajan los datos desde el servidor de Playit hasta tu casa.
+
+🏃‍♂️ El Agente: Es el programa ejecutable en tu PC que se encarga de recibir esos datos del túnel y meterlos a la máquina virtual (192.168.18.94:9924) para que el juego funcione.
+
+Si cierras el Agente en tu Windows, el Túnel se queda sin nadie que reciba los datos en tu casa, y por eso el servidor sale como "Apagado" o "Desconectado" para tus amigos. ¡Ambos se necesitan mutuamente!
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

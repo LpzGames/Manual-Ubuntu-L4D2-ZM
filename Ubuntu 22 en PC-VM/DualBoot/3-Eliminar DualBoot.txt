@@ -1,0 +1,28 @@
+EN CASO DESEES QUITAR DUALBOOT PARA TENER SOLO WINDOWS EN TU ORDENADOR, DEBES:
+
+***
+1- Recuperar el arranque original de Windows (Quitar el GRUB)
+Si simplemente borras las particiones de Linux, el menú GRUB se romperá y la laptop no encenderá. Primero hay que decirle a la placa madre que vuelva a usar el cargador oficial de Windows.
+
+-Estando en Windows, haz clic derecho sobre el botón del menú de Inicio y selecciona Terminal (Administrador) o Símbolo del sistema (Administrador).
+-Escribe el siguiente comando para abrir la herramienta de configuración de arranque y presiona Enter:
+bcdedit /enum firmware
+
+-Te va a salir una lista de los sistemas de arranque instalados. Busca una sección que mencione a ubuntu y fíjate en su identificador (suele ser una serie de números y letras entre llaves, algo como {cbdac438-c7bc-11ed-8fbb-806e6f6e6963}).
+
+-Ejecuta el comando para borrar la entrada de Ubuntu de la placa madre sustituyendo tu identificador exacto:
+bcdedit /delete {el-identificador-largo-aquí}
+
+
+***
+2- Borrar Ubuntu y recuperar tus 30 GB
+Ahora que el arranque está limpio, toca recuperar el espacio que le habías prestado a Linux.
+-En el buscador de Windows entra a 'Crear y formatear particiones particiones del disco duro'.
+-Busca la partición de 29.65 GB que ahora mismo es la de Ubuntu.
+-Haz clic derecho sobre esa partición de 29 GB y selecciona Eliminar volumen. El bloque volverá a ponerse de color negro y dirá "No asignado".
+-Ahora, haz clic derecho sobre tu partición principal Windows (donde está esos 30gb) y selecciona Extender volumen.
+-Dale a Siguiente en el asistente para que absorba automáticamente esos 30 GB libres.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

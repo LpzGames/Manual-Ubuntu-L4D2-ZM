@@ -1,0 +1,8 @@
+ESTA GUIA ES PARA PROBAR PLUGINS (NO ZONEMOD) EN WINDOWS.
+-En caso quieras hacer prueba de plugins en el Servidor Dedicado (gui) en Windows, debes abrir el srcds.exe desde su carpeta raíz con Steam estando cerrado, una vez abierto el srcds.exe recién abrir el juego y conectarse ya que sino saldrá el error de 'Steam Validation Rejected'.
+
+-Otra forma también es tener el juego abierto primero y luego recien abrir srcds.exe desde la raiz.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

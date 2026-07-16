@@ -1,0 +1,17 @@
+***PARA SERVIDOR NORMAL
+-Los plugins se cargan automáticamente al iniciar el servidor si están en addons/sourcemod/plugins/ 
+-Si un plugin personalizado esta en addons/sourcemod/plugins/optional/ 
+Se debe cargar con 'sm plugins load optional/l4d_christmas_tree.smx' en server.cfg
+
+***PARA SERVIDOR ZONEMOD, T1, SVANILLA, ETC
+-Los plugins base de cfgogl se cargan normal de addons/sourcemod/plugins/
+-Si se quiere implementar un plugin propio a una modalidad en especifico,  debes ponerlo en addons/sourcemod/plugins/optional/
+-Luego cargarlo con 'sm plugins load optional/l4d_christmas_tree.smx' en el archivo shared_plugins.cfg de su respectiva modalidad.
+
+***
+En caso sea un plugin propio el cual se quiera compartir para todas las modalidades(como el de navidad) sin tener que estar poniendolo en cada shared_plugins.cfg
+Debes poner 'sm plugins load l4d_christmas_tree.smx' en el archivo sharedplugins.cfg de la carpeta /left4dead2/cfg/sharedplugins.cfg
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

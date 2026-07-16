@@ -1,0 +1,11 @@
+-Ve a la carpeta:
+\L4D2-Competitive-Rework\addons\sourcemod\scripting\sourcemod\
+
+-Copia tu archivo .sp y pégalo dentro de esa carpeta.
+-En esa carpeta verás un archivo llamado compile.exe
+-Arrastra tu archivo .sp con el mouse y suéltalo justo encima del archivo compile.exe
+-Se abrirá una ventana negra de consola por un segundo. Si todo sale bien, se creará el plugin .smx en la carpeta llamada compiled.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

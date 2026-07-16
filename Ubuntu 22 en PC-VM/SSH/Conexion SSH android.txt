@@ -1,0 +1,40 @@
+1- Instala la aplicación Termux
+
+2- Actualizar los repositorios de Termux ejecutando:
+pkg update && pkg upgrade
+
+3- Instalar OpenSSH ejecutando:
+pkg install openssh
+
+4- Conectate a tu máquina (usando IP privada o pública)
+ssh usuario@IP_DE_TU_MAQUINA
+
+
+***EN CASO USES CONEXION SSH CON KEY
+1- Abre Termux y asegúrate de que exista la carpeta .ssh ejecutando:
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+
+2- Pasar el archivo de la llave privada:
+-Tienes que transferir tu llave privada (el archivo sin extensión .pub) de tu computadora al celular. (Puedes subir el archivo a GoogleDrive desde tu pc y luego descargarlo desde GoogleDrive de tu celular).
+-Una vez que el archivo esté en la memoria de tu celular (por ejemplo, en la carpeta Descargas).
+-Dale permiso a Termux para acceder a tus archivos, ejecuta:
+termux-setup-storage
+
+DEBES DARLE PERMISO TOTAL DE STORAGE A TERMUX
+
+-Copia la llave(en este caso le puse de nombre 'sv_l4d2') desde tus descargas a la carpeta de SSH de Termux:
+(Ejemplo)
+cp /storage/emulated/0/Download/sv_l4d2 ~/.ssh/
+
+
+3- Ajustar los permisos:
+SSH es extremadamente estricto con la seguridad de las llaves privadas. Si los permisos son muy abiertos, no te dejará conectarte. Tienes que restringir el archivo para que solo Termux pueda leerlo:
+chmod 600 ~/.ssh/sv_l4d2
+
+4- Una vez hecho esto, ya puedes conectarte a tu Ubuntu usando:
+ssh -i ~/.ssh/sv_l4d2 ubuntu@192.168.18.94
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

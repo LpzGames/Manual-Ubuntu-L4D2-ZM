@@ -1,0 +1,7 @@
+-Pegar el archivo playerjoin_message.smx en la carpeta addons/sourcemod/plugins/optional/
+-Para cargar el plugin por ejemplo sólo en la modalidad T1, svanilla, etc. Se debe agregar:
+'sm plugins load optional/playerjoin_message.smx en el archivo shared_plugins.cfg de esa modalidad.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

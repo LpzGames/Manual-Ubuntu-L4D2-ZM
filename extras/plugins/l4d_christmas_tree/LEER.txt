@@ -1,0 +1,14 @@
+***GENERA ARBOLES DE NAVIDAD CON REGALOS
+https://forums.alliedmods.net/showthread.php?t=319552
+
+1. Pegar el archivo l4d_christmas_tree.smx en addons/sourcemod/plugins/
+2. Pegar el archivo l4d_christmas_tree.cfg en addons/sourcemod/data      <----------------- (Este archivo genera 1 árbol en cada mapa).
+3. Pegar el archivo l4d_christmas_tree.cfg de la carpeta config en left4dead2/cfg/sourcemod/   <--------------- (Este archivo configura cantidad de regalos, colores, efectos, etc).
+
+****
+Si se quiere desactivar el plugin, en el archivo server.cfg se debe poner:
+sm plugins unload l4d_christmas_tree.smx
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

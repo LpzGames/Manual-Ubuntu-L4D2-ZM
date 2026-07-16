@@ -1,0 +1,77 @@
+INSTALACION UBUNTU 22 
+
+***EN LA PANTALLA DE INSTALACION DEL SISTEMA:
+1- En 'try or install ubuntu server' dar enter y esperar.
+2- Escoger idioma (Ingles de preferencia) y dar enter.
+3- En keyboard configuration escoger SPANISH LATAM y dar en 'done'.
+4- En 'Choose the type of installation' escoger la casilla 'Ubuntu Server'.
+5- En 'Network configuration' y 'Proxy configuration' sólo dar done en caso tengas el ordenador conectado con cable Ethernet.
+(En caso de usar laptop debes conectar el wifi presionando enter en la placa de red que figure y dar 'edit Wifi', busca tu red wifi e ingresa la contraseña y dale save, luego espera a que conecte y presiona 'done' para continuar) .
+6- En 'Ubuntu archive mirror configuration' esperar un momento hasta que salga 'This mirror location passed test' y dar done.
+7- En Installer update available dale 'Update' o bien dejarlo en 'Continue without updating'.
+8- En 'Guided storage configuration' escoger Custom storage layout  y dar done.
+
+
+***STORAGE CONFIGURATION : 
+1- Debe figurar la partición con los 30gb en 'AVAILABLE DEVICES'.
+2- Ubicarse en esa partición, presionar enter y 'edit'.
+3- En Format debes elegir 'ext4' y en Mount elegir '/' y dar save.
+4- Ahora en USED DEVICES debe figurar el disco 'dueño' de esa partición que creaste como tambien otra partición de 100-250mb y por último
+la partición de 30gb.
+5- En FILE SYSTEM SUMMARY debe figurar las particiones de 30gb y de 100-250mb.
+6- Dar done y continue en el aviso de confirmación.
+7- En profile configuration, en 'servers name' puedes dejarlo como 'ubuntu-server'. En username y password debes ponerlos como 'ubuntu', los demás campos puedes dejarlos como 'ubuntu', dar enter en 'done'.
+8- En la siguiente pantalla dejar marcado 'skip for now' y dar en continue.
+9- Marcar 'Install OpenSSH' con enter y dar done.
+10- En 'Featured server snaps' dejarlo vacio, bajar, dar done y empezará la instalación. Este proceso demorará unos minutos.
+11- Una vez terminado dar en 'reboot now', la maquina se reinicirá.
+12- Si en caso despues de dar reboot sale [FAILED] Failed unmounting cdrom, solo presionar enter.
+13- Al reiniciar el ordenador te aparecerá el menu GRUB, escoge Ubuntu para arrancar ese sistema.
+**Si en caso se queda la pantalla en varios [OK] durante bastante tiempo (no avanza nada) y al presionar 'enter' no te manda al inicio para que hagas login, debes reiniciar el ordenador (mantener presionado el boton power)
+**Si en caso despues de dar reboot y arrancar Ubuntu te aparece los mensajes de [OK] pero se queda en algo como lo siguiente, debes reiniciar el ordenador (mantener presionado el boton power) :
+watchdog: BUG: soft lockup - CPU#0 stuck for 25s! [kworker/0:2:189]
+
+-Una vez que se detuvo todos los mensajes de [OK], dar enter y nos mostrará una línea para dar login, ingresamos nuestro usuario y contraseña creado previamente (paso 7).
+
+
+*** CONEXION POR SSH DESDE OTRA PC DENTRO DE NUESTRO HOGAR:
+1- Abrimos cmd presionando las teclas 'windows + r' y se abrirá una ventana pequeña, escribimos 'cmd' (sin comillas)
+y damos enter, se abrirá una ventana cmd.
+2- Ingresamos lo siguiente y damos enter (La IP del comando debe ser la que nos mostró nuestra maquina ubuntu en 'IPv4 Address')
+ssh ubuntu@192.168.18.23
+
+3- Escribir 'yes' en la confirmación y dar enter.
+4- Nos pedirá el password del usuario y damos enter.
+5- Se iniciará la sesión con ese usuario.
+
+- Si al querer conectarnos por ssh sale algun error de ' WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! ' es porque:
+Anteriormente te habías conectado por SSH a otro servidor (otra vm o a la misma pero con un ubuntu formateado) que tenía esa misma IP.
+Tu computadora guardó la "huella digital" de ese servidor viejo. Ahora, al intentar conectar con tu nueva máquina de Ubuntu, Windows nota que la huella no coincide y bloquea la conexión por seguridad.
+
+-Para borrar esa huella antigua debes ejecutar (ip de la maquina anterior):
+ssh-keygen -R 192.168.18.23
+
+Y Vuelve a intentar la conexión
+
+
+***ASIGNAR SUDO AL USUARIO
+-Una vez iniciada la sesión con nuestro usuario, ejecutar:
+sudo usermod -aG sudo ubuntu
+
+Si nos aparece '[sudo] password for ubuntu:' debemos ingresar nuestra contraseña del usuario ubuntu
+
+
+***ACTUALIZAR UBUNTU
+sudo apt-get update && sudo apt-get upgrade
+
+
+**COMO APAGAR EL ORDENADOR
+Para apagar el ordenador simplemente presiona el boton power.
+
+
+***INICIO DUALBOOT
+Ahora en adelante cada vez que prendas tu ordenador te saldra el menu GRUB para arrancar el sistema, debes dar enter en "Ubuntu" para arrancar ese sistema, para arrancar Windows debes escoger "Windows Boot Manager"
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

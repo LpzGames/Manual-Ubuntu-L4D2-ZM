@@ -1,0 +1,20 @@
+Para tener Windows y Ubuntu en tu ordenador debes hacer lo siguiente:
+
+Con tu PC con Windows debes:
+**Crear un usb booteable con Rufus:
+1- Descargar Rufus de su página oficial.
+2- Descargar la imagen ISO del sistema operativo Ubuntu 22.
+3- Abrir Rufus, escoger la imagen ISO y dejar los demás campos intactos.
+4- Clic en iniciar proceso y esperar, una vez que llegó al 100% puedes cerrar el programa.
+5- Luego abrir el programa 'Crear y formatear discos' en el buscador de inicio.
+6- Escoger tu disco C u otro, luego dar clic derecho en reducir volumen y asignarle 30gb (30000mb).
+7- Una vez creado esa partición debes:
+-Asignarle un volumen dandole clic derecho, se abrirá una ventana donde debes darle 'siguiente', luego te pedirá que nombre le quieres dar a esa particion(D,E,F, etc) y seguir las instrucciones.
+8- IMPORTANTE: Debes desactivar Bitlocker en el disco donde está la partición que creaste. (Si usas Windows Home, este se encuentra con el nombre "CIFRADO DE DATOS")
+9- Una vez listo ya puedes usar los 30gb como almacenamiento para ubuntu.
+10- Reiniciar el ordenador con el usb booteable conectado y elegir arrancar desde usb en la bios.
+11- Iniciar con el proceso de instalación del sistema.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

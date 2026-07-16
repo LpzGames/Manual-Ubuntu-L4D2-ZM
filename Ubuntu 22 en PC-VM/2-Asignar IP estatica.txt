@@ -1,0 +1,78 @@
+***LOS SIGUIENTES COMANDOS HARAN QUE LA MAQUINA UBUNTU NO CAMBIE DE IP PRIVADA LA CUAL SUELE CAMBIAR
+CUANDO EL ROUTER SE REINCIA O SI LA MAQUINA ESTA APAGADA MUCHO TIEMPO***
+
+1- Entrar a la configuración de red
+En la consola dentro de ubuntu, ejecuta el siguiente comando para ver el archivo de configuración de red:
+ls /etc/netplan/
+
+Te saldrá un archivo terminado en .yaml (normalmente se llama 00-installer-config.yaml o 50-cloud-init.yaml). Ábrelo con el editor nano ejecutando:
+sudo nano /etc/netplan/00-installer-config.yaml
+sudo nano /etc/netplan/50-cloud-init.yaml
+
+
+2- Modificar el archivo YAML
+Verás que dice algo como dhcp4: true. Borra eso y reemplázalo manualmente para que quede exactamente estructurado así (respeta mucho los espacios, no uses la tecla TAB, usa espacios normales ya que YAML es muy estricto con las sangrías):
+
+PARA LAPTOP CON WIFI USA ESTA PLANTILLA (cambia los valores respectivos en access-point):
+network:
+  version: 2
+  wifis:
+    wlo1:
+      dhcp4: no
+      addresses:
+        - 192.168.18.23/24
+      routes:
+        - to: default
+          via: 192.168.18.1
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+      access-points:
+        "JUANL2 - 5Ghz":
+          password: "593231045Jelr$&%"
+
+
+PARA CONEXION CON CABLE ETHERNET:
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses:
+        - 192.168.18.94/24
+      routes:
+        - to: default
+          via: 192.168.18.1
+      nameservers:
+        addresses: [8.8.8.8, 1.1.1.1]
+
+*********⚠️ Notas muy importantes sobre lo que vas a escribir*********
+- enp0s3 o wlo1 es el nombre de tu tarjeta de red (figura cuando hacemos login en la máquina).
+- via: 192.168.18.1 debe ser la IP de tu router de internet.
+- addresses es la ip privada que tendrá tu maquina 
+- /24 es obligatorio al final de la IP (indica la máscara de red habitual de casa).
+****************************************************************
+
+
+3- Guardar y Aplicar
+-Para guardar los cambios en nano presiona Ctrl + O y luego Enter.
+-Para salir presiona: Ctrl + X.
+-Ahora, dile a Ubuntu que aplique la configuración ejecutando:
+sudo netplan apply
+
+-Aunque veas ese texto que dice WARNING:root:..., no es un error crítico y no significa que tu configuración haya fallado.
+-Eso es simplemente una advertencia (WARNING) porque Netplan intenta buscar un servicio llamado Open vSwitch (usado para redes virtuales muy avanzadas/empresariales) y, al notar que tu Ubuntu Server no lo tiene instalado ni corriendo, te lo avisa. Pero para una red de casa normal y corriente con VirtualBox, lo ignora por completo y aplica los cambios.
+
+
+4- Vamos a verificar que funcionó:
+-Para asegurarte al 100% de que ya tienes la ip fija, ejecuta el siguiente comando en tu consola: 
+ip a show enp0s3
+**(cambia enp0s3 por el nombre de tu tarjeta de red si es necesario)
+
+-Revisa las líneas que te arroje. Si entre el texto ves que dice inet 192.168.18.xx/24, ¡ya quedó listo y configurado! Tu IP no se moverá más y puedes seguir con el servidor de L4D2.
+
+-Además, si te fijas abajo donde dice valid_lft forever preferred_lft forever, te está confirmando que esa IP ya no tiene un tiempo de expiración (como pasaba con el DHCP del router), ahora es totalmente permanente.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

@@ -1,0 +1,105 @@
+1- Instalar Fail2Ban
+-Esta herramienta es mágica para servidores expuestos.
+-Revisa los intentos de inicio de sesión y si ve que una IP falla (por ejemplo) 3 o 5 veces seguidas, bloquea esa IP por completo en el firewall durante horas o días.
+-Para instalarlo en Ubuntu solo necesitas:
+sudo apt update
+sudo apt install fail2ban -y
+sudo systemctl restart fail2ban
+
+-Fail2Ban empieza a bloquear IPs atacantes de inmediato.
+-Fail2Ban asocia esa falla a la IP que lo intentó. Si esa misma IP llega al límite permitido dentro de un tiempo determinado, bloqueará esa IP.
+
+*******
+-El bloqueo no es eterno
+-Viene configurado con un bantime de 10 minutos. Si te bloqueas a ti mismo, basta con que esperes 10 minutos (sin intentar conectarte, porque cada intento fallido puede renovar el tiempo) y podrás volver a probar.
+
+2- Cómo añadir tu propia IP a la "Lista Blanca"
+-Puedes decirle a Fail2Ban: "Vigila a todo el mundo, menos a mí". Para hacer esto, debes editar su archivo de configuración:
+sudo nano /etc/fail2ban/jail.local
+
+-Se abrirá un editor de texto y deberás pegar lo siguiente:
+[DEFAULT]
+ignoreip = 127.0.0.1/8 ::1 192.168.18.0/24
+bantime  = 1h
+maxretry = 3
+
+[sshd]
+enabled = true
+
+-Presiona Ctrl + O para guardar (te preguntará si quieres guardarlo con el nombre jail.local, presionas Enter para confirmar).
+-Presiona Ctrl + X para salir de nano.
+-Reinicia Fail2Ban para que lea tu nuevo archivo personalizado:
+sudo systemctl restart fail2ban
+
+**127.0.0.1/8 
+-Poner esto en la lista blanca asegura que Fail2Ban nunca bloquee los servicios internos del propio servidor.
+
+**192.168.18.0/24
+-Le dice a Fail2Ban: "permite a todo su grupo, osea a todos los dispositivos conectados a tu router 192.168.18.x ".
+-Si pones solo 192.168.18.5, Fail2Ban solo protegerá al dispositivo que tenga esa IP exacta.
+-En resumen: 192.168.18.0/24 significa toda tu red local. Cualquier dispositivo conectado a tu Wi-Fi (del dispositivo .1 al .254) estará en la lista blanca de Fail2Ban.
+-También puedes poner tu IP pública fija si la tienes. Separa las IPs con un espacio:
+(Ejemplo)
+ignoreip = 127.0.0.1/8 ::1 192.168.18.0/24 147.185.221.225:9924 157.195.321.125:3342
+
+3- Puedes comprobar si Fail2Ban realmente está vigilando el puerto SSH con este comando:
+sudo fail2ban-client status
+
+-Debería salirte algo como esto en la respuesta:
+Status
+|- Number of jail:      1
+`- Jail list:           sshd
+
+-Si en la lista no aparece sshd, significa que el filtro está apagado. Para encenderlo, crea el archivo /etc/fail2ban/jail.local (como vimos en el paso anterior) y asegúrate de que tenga esto escrito:
+[sshd]
+enabled = true
+
+-Y luego reinicias con:
+sudo systemctl restart fail2ban
+
+4- ¿Está el servicio activo?
+Asegúrate de que Fail2Ban esté corriendo en segundo plano:
+sudo systemctl status fail2ban
+
+Debería mostrar un mensaje en verde que dice active (running)
+
+5- Si quieres ver la "magia" en acción:
+-Abre dos terminales diferentes en tu computadora (o usa tu celular con datos móviles para una de ellas, así no te quedas bloqueado tú mismo en tu red local).
+-En la Terminal 1, conéctate de forma normal a tu servidor y ejecuta este comando para ver a quién está bloqueando en tiempo real:
+sudo fail2ban-client status sshd
+
+(Verás que donde dice "Banned IP list" probablemente esté vacío).
+
+-En la Terminal 2, intenta conectarte con contraseña errónea. Falla 3 veces hasta que te eche. Vuelve a iniciar la conexión y falla otras 2 o 3 veces.
+-En tu intento número 5 o 6, notarás que la terminal se queda "congelada" o te dice directamente Connection refused o Connection timed out. ¡Ya te ha bloqueado!
+-Vuelve a la Terminal 1 (donde sí estás conectado de verdad) y ejecuta otra vez:
+sudo fail2ban-client status sshd
+
+-Verás tu IP en la lista de baneados.
+
+6- Cómo desbloquear una IP manualmente
+-Si te bloqueas a ti mismo (o a un amigo) y no quieres esperar el tiempo de ban, si tienes otra forma de acceder al servidor (por ejemplo, desde la tty física de la máquina o mediante la consola web de tu proveedor de hosting), puedes levantar el castigo con este comando:
+sudo fail2ban-client set sshd unbanip TU_IP_BLOQUEADA
+
+
+***DESINSTALAR FAIL2BAN
+1- Detener el servicio
+-Primero, vamos a apagar el programa para asegurarnos de que libere todas las IPs que tenga bloqueadas en el firewall en este momento:
+sudo systemctl stop fail2ban
+
+2- Desinstalar eliminando configuraciones (Purge)
+-En lugar de usar un remove normal, usaremos purge. Esto desinstala el programa y además borra sus archivos de configuración (como el archivo jail.local para que no deje basura en el sistema):
+sudo apt purge fail2ban -y
+
+3- Limpiar dependencias sobrantes
+-A veces, al instalar programas se instalan pequeñas herramientas extra (dependencias) que ya no se necesitan. Con este comando las borramos:
+sudo apt autoremove -y
+
+4- Elimina el archivo jail.local
+sudo rm -rf /etc/fail2ban
+
+-Con esto ya no quedará rastro de Fail2Ban en tu servidor.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

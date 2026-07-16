@@ -1,0 +1,80 @@
+INSTALACION UBUNTU 22 
+
+***VIRTUAL BOX*** (Testeado en la Versión 7.0)
+1- Abrir VirtualBox.
+2- Dar clic en 'máquina' en el menú, seleccionar 'nueva'.
+3- Seleccionar nombre de la máquina. (Ejemplo: ubuntu22)
+4- Seleccionar carpeta de instalacion.
+5- Seleccionar imagen ISO del sistema operativo (Ubuntu 22).
+6- Marcar omitir instalacion desatendida y dar 'siguiente'.
+7- Asignar ram(4gb) y cpu(2 cores), dar 'siguiente'.
+8- Asignar capacidad de almacenamiento (30gb) y marcar reservar tamaño completo, siguiente.
+9- Hacemos clic en terminar, esperar y seleccionar la máquina creada, luego dar 'Iniciar'
+
+
+***EN LA PANTALLA DE INSTALACION DEL SISTEMA:
+1- En 'try or install ubuntu server' dar enter y esperar.
+2- Escoger idioma(Ingles de preferencia) y dar enter.
+3- En Installer update available dale 'Update' o bien dejarlo en 'Continue without updating'.
+4- En keyboard configuration escoger SPANISH LATAM y dar en 'done'
+5- En 'Choose the type of installation' escoger la casilla 'Ubuntu Server'
+6- En 'Network configuration' y 'Proxy configuration' sólo dar done. (En caso de usar laptop, se debe conectar el wifi presionando enter y 'edit Wifi', buscar la red e ingresar la contraseña, esperar a que conecte y presionar 'done') .
+7- En 'Ubuntu archive mirror configuration' esperar un momento hasta que salga 'This mirror location passed test' y dar done.
+8- En 'Guided storage configuration' dejarlo como está y dar done.
+
+
+*** STORAGE CONFIGURATION : 
+En la pantalla de confirmación del particionado de disco para que use todo el espacio (los 30 GB o lo que hayas escogido):
+1- Usa las flechas para subir hasta donde dice [ ubuntu-lv    new, to be formatted as ext4, mounted at /    14.324G ] (está bajo la sección USED DEVICES).
+2- Presiona enter sobre esa línea. Se abrirá un pequeño menú.
+3- Selecciona la opción edit.
+4- En el campo Size, verás que tiene el número 14.324G.  Bajar con las flechas del teclado y dejar el campo de tamaño vacío usando la tecla 'borrar', el instalador tomará todo el espacio disponible, dar save y luego done. 
+5- Dar continue en el aviso de confirmación..
+6- En profile configuration llenar campos, en 'servers name' puedes dejarlo como 'ubuntu-server'. En username y password debes ponerlos como 'ubuntu', los demás campos puedes dejarlos como 'ubuntu', dar enter en 'done'.
+7- En la siguiente pantalla dejar marcado 'skip for now' y dar en continue.
+8- Marcar 'Install OpenSSH' con enter y dar done.
+9- En 'Featured server snaps' dejarlo vacio, bajar, dar done y empezará la instalación. Este proceso demorará unos minutos.
+10- Una vez terminado dar en 'reboot now', la maquina se reinicirá y mostrará varios mensajes de [OK].
+**Si en caso despues de dar reboot sale [FAILED] Failed unmounting cdrom, solo presionar enter.**
+11- Una vez que se detuvo todos los mensajes de [OK], dar enter y nos mostrará una línea para dar login, ingresamos nuestro usuario y contraseña creado previamente (paso 6).
+
+
+***Habilitar la IP en nuestra VM:
+1- Ir a la ventana principal de virtualbox y dar clic derecho en nuesta maquina -> configuración.
+2- Ir a 'Red' y en 'Conectado a:' escoger 'Adaptador puente' y aceptar.
+3- Volvemos a nuestra maquina virtual y escribimos 'exit' para salir de la sesión, esperamos unos segundos y volvemos a iniciar sesión para ver la IP la cual se mostrará en el apartado 'IPv4 Address'.
+
+
+*** Conexion por SSH desde nuestra PC:
+1- Volvemos a nuestra PC (Física).
+2- Abrimos cmd presionando las teclas 'windows + R' y se abrirá una ventana pequeña, escribimos 'cmd' (sin comillas) y damos enter, se abrirá una ventana cmd.
+3- Ingresamos lo siguiente y damos enter (La IP del comando debe ser la que nos mostró nuestra maquina virtual en 'IPv4 Address'):
+ssh ubuntu@192.168.18.54
+
+4- Escribir 'yes' en la confirmación y dar enter.
+5- Nos pedirá el password del usuario y damos enter.
+6- Se iniciará la sesión con ese usuario.
+
+-Si al querer conectarnos por ssh sale algun error de ' WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! ' es porque:
+Anteriormente te habías conectado por SSH a otro servidor (otra vm o a la misma pero con un ubuntu formateado) que tenía esa misma IP.
+Tu computadora guardó la "huella digital" de ese servidor viejo. Ahora, al intentar conectar con tu nueva máquina de Ubuntu, Windows nota que la huella no coincide y bloquea la conexión por seguridad.
+
+-Para borrar esa huella antigua se debe usar (ip de la maquina anterior):
+ssh-keygen -R 192.168.18.54
+
+Y Vuelve a intentar la conexión.
+
+
+***ASIGNAR SUDO AL USUARIO
+-Una vez iniciada la sesión con nuestro usuario, ejecutar:
+sudo usermod -aG sudo ubuntu
+
+Si nos aparece '[sudo] password for ubuntu:' debemos ingresar nuestra constraseña del usuario ubuntu.
+
+
+***ACTUALIZAR UBUNTU
+sudo apt-get update && sudo apt-get upgrade
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

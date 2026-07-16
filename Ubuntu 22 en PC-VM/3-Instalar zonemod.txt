@@ -1,0 +1,360 @@
+************************** CONEXION A LA MAQUINA UBUNTU E INSTALACION DE ARCHIVOS NECESARIOS **************************
+Una vez creada nuestra VM, desde Windows procedemos:
+
+1- NOS CONECTAMOS MEDIANTE SSHH A LA VM:
+-Abre cmd en Windows y ejecutamos (USAR LA IPv4 DE LA VM O LA IP PUBLICA EN CASO LA TENGA):
+ssh ubuntu@192.168.18.53
+
+-Ingresamos nuestra contraseña y damos enter.
+
+
+***
+2- INSTALACION DE ARCHIVOS NECESARIOS EN LA VM (Ejecutamos uno por uno), dar 'si o yes' en caso nos pida confirmación, si nos aparece una ventana color morada, solo debes presionar enter para continuar:
+
+sudo dpkg --add-architecture i386 # enable multi-arch
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install libc6:i386 # install base 32bit libraries
+sudo apt-get install lib32z1
+sudo apt-get install screen
+
+
+***
+3- AGREGAMOS UN USUARIO CON NOMBRE 'STEAM':
+-El siguiente comando nos pedira crear un password (no olvidar el password):
+sudo adduser steam
+
+-Nos pedirá crearle una password, puedes asignarle 'steam'
+-Nos pedirá llenar FullName, Home Phone, etc. Simplemente dejar vacio, presionar enter y luego confirmar con 'y'.
+-El siguiente comando brinda permisos sudo al usuario creado.
+sudo adduser steam sudo
+
+-El siguiente comando puede pedir la password de nuestro usuario actual(ubuntu), despues de ingresar nos pedirá nuestra user y password del usuario 'steam'.
+sudo login
+
+Nos mostrará 'login:'  es aqui donde debemos escribir el nombre del usuario al que queremos iniciar sesion, es este caso 'steam'
+
+
+**************************** INSTALACION DE STEAM Y SERVIDOR DEDICADO L4D2 EN UBUNTU *********************************
+4- ASEGURATE DE ESTAR LOGUEADO CON EL USUARIO 'STEAM' EN LA VM
+
+INSTALAMOS STEAM EJECUTANDO LOS SIGUIENTES COMANDOS (uno por uno):
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz
+tar -xvzf steamcmd_linux.tar.gz
+
+INSTALAMOS EL SERVIDOR DEDICADO L4D2 (ejecuta ambas lineas):
+./steamcmd.sh +force_install_dir ./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType windows +app_update 222860 validate +quit && \./steamcmd.sh +force_install_dir ./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType linux +app_update 222860 validate +quit
+
+SI AL EJECUTAR LA PRIMERA VEZ NOS MUESTRA "@sSteamCmdForcePlatformType"= "windows", significa que hay que volver a ejecutar el comando del paso 3.
+
+SI ESTA TODO BIEN, DEBE MOSTRAR "linux":
+#############################################################
+Connecting anonymously to Steam Public...OK
+Waiting for client config...OK
+Waiting for user info...OK
+"@sSteamCmdForcePlatformType" = "linux"
+ Update state (0x61) downloading, progress: 16.78 (34031704 / 202753317)
+ Update state (0x61) downloading, progress: 89.41 (181272704 / 202753317)
+IPC function call IClientAppManager::GetUpdateInfo took too long: 67 msec
+Success! App '222860' fully installed.
+Unloading Steam API...OK
+#############################################################
+
+
+**********************************INSTALACION DE ARCHIVOS ZONEMOD AL SERVIDOR DEDICADO ***************************************
+
+5- EN TU MAQUINA WINDOWS DESCARGAMOS LO SIGUIENTE (ARCHIVOS ZONEMOD):
+*L4D2-Competitive-Rework:  		https://github.com/LpzGames/L4D2-Competitive-Rework.git
+*T1-ZM:  				https://github.com/LpzGames/T1-ZM.git 
+*SuperVanilla:  			https://github.com/LpzGames/SuperVanilla.git
+*Practiceogl-Rework:  		https://github.com/LpzGames/Practiceogl-Rework.git
+
+-Ubicamos en nuestra pc el archivo 'srcds1' en la ruta \L4D2-Competitive-Rework\Dedicated Server Install Guide\srcds1
+-Abrimos el archivo srcds1 con algun editor de texto (block de notas o notepad++)
+-Ponemos la Private IPv4 address de la VM dentro del archivo srcds1 en el apartado 'IP' y guardamos cambios.
+
+
+***
+6- ASIGNAR ADMINS EN EL SERVIDOR L4D2
+-Para asignar admins se debe modificar el archivo 'admins_simple.ini' de la ruta \L4D2-Competitive-Rework\addons\sourcemod\configs\
+-Ingresamos a la página https://steamid.io
+-Ingresamos el link de nuestro perfil steam en esa página y nos mostrará un campo como -> STEAM_1:1:104132302
+-Abrimos el archivo admins_simple.ini con un editor de texto y agregamos al final de ese archivo lo siguiente:
+"STEAM_1:1:104132302"  "99:z" 
+-Donde "STEAM_1:1:104132302" debes cambiarlo por tu steamID, "99:z" significa que ese steamID tendrá permisos admin en el servidor.
+-Guardamos cambios.
+
+
+***
+7- AHORA MOVEMOS EL ARCHIVO SRCDS1 DESDE NUESTRA PC A LA VM:
+-Abrimos una nueva terminal cmd en nuestra PC
+-Ejecutamos el siguiente comando(usar toda la ruta donde este el archivo srcds1, reemplazar @tuIP):
+**EN CASO TENGAS UNA KEY SSH, DEBERAS USAR ESA LLAVE PARA COPIAR ARCHIVOS**
+
+(Ejemplo):
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\L4D2-Competitive-Rework\Dedicated Server Install Guide\srcds1" ubuntu@192.168.18.23:/home/ubuntu/
+
+-Nos pedirá nuestra contraseña del usuario ubuntu, ingresamos y damos enter.
+-Una vez copiado el archivo, sólo se muestra el nombre del archivo en la terminal (confirmando así el éxito del copiado).
+
+-Volvemos al cmd conectado a la VM, debemos estar con la sesión del usuario ubuntu , si en caso tu SSH esta con el usuario 'steam' logueado, ejecuta lo siguiente para salir de la sesión y volver al usuario principal:
+exit
+
+-Una vez ubicado en el usuario principal, ejecutamos el siguiente comando para mover el archivo srcds1 en ubuntu, estando con el usuario ubuntu activo:
+sudo cp -r /home/ubuntu/srcds1 /etc/init.d/
+
+
+***
+8- DAMOS PERMISOS PARA QUE SE PUEDA EJECUTAR EL ARCHIVO SRCDS1:
+sudo chmod +x /etc/init.d/srcds1
+
+
+***
+9- VOLVEMOS AL CMD DE NUESTRA PC, MISMO QUE USAMOS PARA COPIAR EL ARCHIVO SRCDS1 DESDE NUESTRA PC A LA VM
+-Antes de continuar debemos cambiar el nombre del archivo server.cfg a 'server1.cfg' ubicado en /L4D2-Competitive-Rework/cfg/
+-Movemos las siguientes carpetas (ARCHIVOS ZONEMOD) desde la PC a UBUNTU (usa la ruta donde tengas tus carpetas).
+(Ejecutamos uno por uno y espera a que el copiado termine)
+(Ingresar el password del usuario steam si nos pide, dar enter y esperar)
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\L4D2-Competitive-Rework" steam@192.168.18.23:/home/steam/
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\SuperVanilla" steam@192.168.18.23:/home/steam/
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\T1-ZM" steam@192.168.18.23:/home/steam/
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\Practiceogl-Rework" steam@192.168.18.23:/home/steam/
+
+
+***
+10- VOLVEMOS AL SSH CONECTADO A LA VM:
+-Ejecutamos 'sudo login' para ingresar al usuario steam.
+-Movemos el contenido de las carpetas copiadas previamente hacia la carpeta steam de la VM, ejecutando cada comando:
+cp -r /home/steam/L4D2-Competitive-Rework/* /home/steam/Steam/steamapps/common/l4d2/left4dead2/
+cp -r /home/steam/SuperVanilla/* /home/steam/Steam/steamapps/common/l4d2/left4dead2/
+cp -r /home/steam/T1-ZM/* /home/steam/Steam/steamapps/common/l4d2/left4dead2/
+cp -r /home/steam/Practiceogl-Rework/* /home/steam/Steam/steamapps/common/l4d2/left4dead2/
+
+
+***
+11- ARRANCAMOS EL SERVIDOR CON EL SIGUIENTE COMANDO:
+sudo /etc/init.d/srcds1 restart
+
+-Al ejecutar el comando debe mostrar lo siguiente:
+Stopping L4D2 Dedicated Server #1 on port 27015: L4D2_Server1 ... done.
+Starting L4D2 Dedicated Server #1 on port 27015: L4D2_Server1 ... done.
+
+-Para ver la consola del servidor L4D2 en vivo, estando dentro del usuario steam para verificar que el servidor está corriendo correctamente (debe mostrar varios comandos del juego ejecutandose):
+screen -r L4D2_Server1 
+
+-Para salir de screen sin cerrar el proceso del servidor dedicado:
+ctrl a d 
+
+-Si vemos los comandos ejecutandose significa que nuestro servidor L4D2 ya está iniciado, para conectarnos al servidor debemos abrir la consola en el juego y ejecutar:
+connect IP_VM:27105
+
+
+***
+12- PARA CONECTARNOS LOCALMENTE AL SERVIDOR:
+-Abrimos el juego en nuestra pc.
+-Abrimos la consola del juego e ingresamos lo siguiente y damos enter:
+connect 192.168.18.54:27105
+DONDE LA IP ES LA IPv4 DE LA VM Y EL PUERTO ES EL 27015(configurado en el archivo srcds1)
+
+
+***
+13- CREAR UNA SALA PARA JUGAR EN EL SERVIDOR (HACER ESTO CUANDO EL SERVIDOR TENGA IP PUBLICA, NO HACER ESTO EN LOCAL)
+-Abrimos el juego.
+-Creamos una sala de espera en modo enfrentamiento 
+-Escogemos 'Mejor Dedicado Disponible' 
+-Abrimos la consola del juego e ingresamos el comando mm_dedicated_force_servers + la ip 
+(Ejemplo):
+mm_dedicated_force_servers 57.156.56.2:27105
+
+-Damos enter, esto hará que la sala de espera esté asociada servidor.
+-En la sala escogemos 'Mejor Dedicado Disponible' y damos iniciar partida cuando la sala tenga jugadores (OJO QUE EL SERVIDOR TIENE QUE ESTAR VACIO PARA PODER UNIRNOS DESDE LA SALA DE ESPERA, SI EN CASO HAY JUGADORES EN EL SERVIDOR TENDRAS QUE BOTARLOS PARA PODER CREAR UNA PARTIDA DESDE LA SALA, PARA BOTARLOS PUEDES USAR EL COMANDO DE REINICIO DE SERVIDOR EJECUTANDO 'sudo /etc/init.d/srcds1 restart' DESDE TU CMD SSH CONECTADO A  TU MAQUINA UBUNTU, UNA VEZ REINICIADO EL SERVIDOR DEBES ESPERAR UNOS 15SEG ANTES DE ARRANCAR LA SALA PARA QUE LE SERVIDOR CARGUE TODA LA CONFIGURACION NECESARIA)
+
+
+***IMPORTANTE
+-Si el servidor detecta que todos los jugadores se han desconectado, este se reiniciará aprox en 30seg.
+-En caso se haya terminado una campaña y quieres volver a crear otra sala, debemos esperar aprox 30seg para que
+el servidor se reinicie, si en caso no deseas esperar ese tiempo debes ejecutar otra vez el comando 'sudo /etc/init.d/srcds1 restart' en el cmd
+conectado a la VM, una vez reiniciado debes esperar unos 15 seg antes de arrancar la sala para que el servidor cargue toda configuracion necesaria. 
+
+
+***
+14- CREAR UN SERVICIO EN UBUNTU PARA QUE ARRANQUE EL SERVIDOR L4D2 AL PRENDER LA VM:
+-En la VM ejecuta:
+sudo nano /etc/systemd/system/l4d2.service
+
+-Se abrirá un editor de texto, pega todas las siguientes líneas tal cual:
+
+[Unit]
+Description=Left 4 Dead 2 Server
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/etc/init.d/srcds1 start
+ExecStop=/etc/init.d/srcds1 stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+
+-Guarda el archivo con:
+1- CTRL + O
+2- Enter
+3- CTRL + X
+
+-Recarga systemd:
+sudo systemctl daemon-reload
+
+-Activar para arranque automático:
+sudo systemctl enable l4d2
+
+-Arrancar el servicio:
+sudo systemctl start l4d2
+
+-Verifica estado:
+sudo systemctl status l4d2
+
+(Opcional)
+-Limpiar errores si ocurrió una falla al iniciar el servicio :
+sudo systemctl reset-failed
+
+-DESPUES DE EJECUTAR 'sudo systemctl status l4d2' DEBE MOSTRAR LO SIGUIENTE SIN NINGUN MENSAJE ROJO:
+*******************************************************
+ l4d2.service - Left 4 Dead 2 Server
+     Loaded: loaded (/etc/systemd/system/l4d2.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sat 2026-02-28 16:14:32 UTC; 5s ago
+    Process: 1795 ExecStart=/etc/init.d/srcds1 start (code=exited, status=0/SUCCESS)
+   Main PID: 1795 (code=exited, status=0/SUCCESS)
+        CPU: 10ms
+
+Feb 28 16:14:32 misifus-server systemd[1]: Starting Left 4 Dead 2 Server...
+Feb 28 16:14:32 misifus-server su[1796]: (to steam) root on none
+Feb 28 16:14:32 misifus-server su[1796]: pam_unix(su-l:session): session opened for user steam(uid=1001) by (uid=0)
+Feb 28 16:14:32 misifus-server su[1796]: pam_unix(su-l:session): session closed for user steam
+Feb 28 16:14:32 misifus-server srcds1[1795]: Starting L4D2 Dedicated Server #1 on port 27015: L4D2_Server1
+Feb 28 16:14:32 misifus-server su[1810]: (to steam) root on none
+Feb 28 16:14:32 misifus-server su[1810]: pam_unix(su-l:session): session opened for user steam(uid=1001) by (uid=0)
+Feb 28 16:14:32 misifus-server su[1810]: pam_unix(su-l:session): session closed for user steam
+Feb 28 16:14:32 misifus-server systemd[1]: Finished Left 4 Dead 2 Server.
+*********************************************************
+
+-Finalmente ejecutar el siguiente comando, este reiniciará la VM y nos desconectará de SSH (para conectarnos a la vm esperar unos 15seg aprox):
+sudo reboot
+
+-Si todo está bien, el servidor L4D2 debe haberse iniciado sin que manualmente hayamos puesto 'sudo /etc/init.d/srcds1 restart'
+
+
+***
+15- PARA ACTUALIZAR LA APLICACION DEL SERVIDOR DEDICADO DEBERAS EJECUTAR LO SIGUIENTE (uno por uno), ESTANDO LOGUEADO EN EL USUARIO STEAM EN TU VM:
+
+./steamcmd.sh  
+force_install_dir ./Steam/steamapps/common/l4d2  
+login anonymous  
+app_update 222860 validate  
+quit  
+
+
+------------------------------------------------- INFO ADICIONAL -------------------------------------------------------
+***IMPORTANTE, CUANDO COPIES Y PEGUES UN NUEVO ARCHIVO COMO server1.cfg u otro EN EL SERVIDOR, DEBERAS EJECUTAR EL COMANDO 
+'sudo /etc/init.d/srcds1 restart' PARA QUE EL SERVIDOR APLIQUE LOS CAMBIOS DE LOS NUEVOS ARCHIVOS.
+
+***COMANDOS RECURRENTES
+-Copiar archivos de la PC a la VM estando en cmd:
+scp -r "C:\Users\BILLY\Desktop\l4d2-zonemod\git\L4D2-Competitive-Rework\cfg\server1.cfg" steam@192.168.18.34:/home/steam/
+
+-Copiar el archivo desde el usuario steam estando dentro de la VM
+cp -r /home/steam/server1.cfg /home/steam/Steam/steamapps/common/l4d2/left4dead2/cfg/
+
+-Reinciar servidor L4D2 para actualizar cambios
+sudo /etc/init.d/srcds1 restart
+
+
+***
+Los cfgs de la carpeta 'l4d2\left4dead2\cfg\cfgogl\zonemod(u otra modalidad)' son para modificar parametros/plugins.
+
+
+***
+ELIMINAR ARCHIVOS DE LA VM , estando con el usuario steam(ejemplo):
+rm /home/steam/Steam/steamapps/common/l4d2/left4dead2/addons/sourcemod/plugins/Playerjoin.smx
+
+
+***
+-PARA ASIGNAR QUE SOLO ADMINS PUEDAN DAR !match, !rmatch ,etc DEBES MODIFICAR EL ARCHIVO 'admin_overrides.cfg' EN LA RUTA \L4D2-Competitive-Rework\addons\sourcemod\configs\
+
+Eliminar o dejar los siguientes comandos:
+"sm_match"     "z"       //permite que sólo admins puedan dar !match
+"sm_rmatch"    "z"	 //permite que sólo admins puedan dar !rmatch
+"sm_pause"    "z"	//permite que sólo admins puedan dar !pause
+
+-Guarda cambios y ahora copia ese archivo desde tu PC a tu VM:
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\L4D2-Competitive-Rework\addons\sourcemod\configs\admin_overrides.cfg" steam@57.156.58.125:/home/steam/
+
+-Luego dentro de tu VM mueve ese archivo a su lugar correspondiente:
+sudo cp -r /home/steam/admin_overrides.cfg /home/steam/Steam/steamapps/common/l4d2/left4dead2/addons/sourcemod/configs/
+
+-Reinicia el servidor L4D2 para aplicar cambios.
+
+
+***
+-Para que el servidor al arrancar cargue una modalidad en específico de forma directa sin estar dando '!match', abre el archivo server1.cfg ubicado en \L4D2-Competitive-Rework\cfg\server1.cfg
+-Abrelo con un editor de texto y agrega o reemplaza al final del archivo lo siguiente:
+sm_forcematch zonemod
+
+-Guarda cambios y ahora copia ese archivo desde tu PC a tu VM:
+scp -r "E:\Instaladores de Programas\l4d2-zonemod\git\L4D2-Competitive-Rework\cfg\server1.cfg" steam@57.156.58.125:/home/steam/
+
+-Una vez copiado el archivo, dentro de tu VM procede a copiar el archivo al lugar correspondiente:
+sudo cp -r /home/steam/server1.cfg /home/steam/Steam/steamapps/common/l4d2/left4dead2/cfg/
+
+-Reincia el servidor L4D2 para aplicar cambios:
+
+
+*** LOS PLUGINS:
+weaponrules.smx reemplaza una arma por otra (ak47 -> smg)
+weaponlimits.smx limita la cantidad que una arma puede ser usada en el equipo.
+
+
+***
+PARA CARGAR PLUGINS DE FORMA GLOBAL(PARA TODOS LOS MODOS):
+-Descarga el plugin que requieras (extensión '.smx')
+-Copia el plugin nombrePlugin.smx a la ruta en tu VM :
+/home/steam/Steam/steamapps/common/l4d2/left4dead2/addons/sourcemod/plugins/
+
+-Luego agrega lo siguiente en el archivo 'sharedplugins.cfg' ubicado en \L4D2-Competitive-Rework\left4dead2\cfg\
+sm plugins load nombrePlugin.smx
+
+-Guarda cambios y agrega ese archivo sharedplugins.cfg a su ruta correspondiente en la VM:
+/home/steam/Steam/steamapps/common/l4d2/left4dead2/cfg/
+
+-Reinicia el servidor L4D2 para actualizar cambios
+
+SI SOLO QUIERES AGREGAR EL PLUGIN A UNA SOLA MODALIDAD POR EJEMPLO PARA T1:
+-Copia el plugin nombrePlugin.smx a la ruta:
+/home/steam/Steam/steamapps/common/l4d2/left4dead2/addons/sourcemod/plugins/optional/
+
+-Luego agrega lo siguiente en el archivo 'sharedplugins.cfg' ubicado en \left4dead2\cfg\cfgogl\t1_zm\
+sm plugins load optional/nombrePlugin.smx
+
+-Guarda cambios y agrega ese archivo sharedplugins.cfg a su ruta correspondiente en la VM:
+/home/steam/Steam/steamapps/common/l4d2/left4dead2/cfg/cfgogl/t1_zm/
+
+-Reinicia el servidor L4D2 para actualizar cambios
+
+***
+PARA DESHABILITAR KICKEO POR MAT HDR LEVEL 0:
+-Para el modo T1 debes comentar la siguiente linea ubicada al final del archivo \T1-ZM\cfg\cfgogl\t1_zm\shared_settings.cfg
+confogl_trackclientcvar        "mat_hdr_level"       "1"      "2.0"       "0"      "0.0"
+
+Osea dejarla así:
+//confogl_trackclientcvar        "mat_hdr_level"       "1"      "2.0"       "0"      "0.0"
+
+-Para el modo SuperVanilla 4v4, sigue las mismas instrucciones que para T1
+-Para los demas modos debes comentar las lineas del archivo ubicado en \L4D2-Competitive-Rework\cfg\cvar_tracking.cfg:
+confogl_trackclientcvar         mat_fullbright                              1           0           1           0
+confogl_trackclientcvar         mat_hdr_level                               1           2           1           2
+
+-Copia esos archivos y actualizalos en la ruta correspondiente en la VM
+-Reinicia el servidor L4D2 para aplicar cambios.
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸

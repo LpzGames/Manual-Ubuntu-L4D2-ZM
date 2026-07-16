@@ -1,0 +1,71 @@
+-Este paso es opcional en caso quieras ahorrarte el costo de la IP estatica que azure te cobra durante el mes aún asi no usas la VM.
+-Este método hace que se genere una IP pública para tu VM cuando se prenda, y que se elimine al apagar la VM.
+
+**ANTES DE EMPEZAR VERIFICA QUE TENGAS LA VM APAGADA
+
+1- Desasociar la IP pública de la máquina virtual que Azure creó:
+-Entra al Portal de Azure.
+-En la barra de búsqueda de arriba, escribe Máquinas virtuales y selecciona tu VM.
+-En el menú de la izquierda, dentro de la sección Configuración (Settings), haz clic en Redes (Networking).
+-Haz clic sobre el nombre de la Interfaz de red (NIC) asociada a tu máquina virtual (suele tener un nombre como tu-vm-nic).
+-En el menú izquierdo de la tarjeta de red, ve a Configuraciones de IP (IP configurations).
+-Haz clic sobre la configuración de IP activa (normalmente se llama ipconfig1).
+-Verás una sección que dice Dirección IP pública (Public IP address). Cámbiala a Desasociar (Disassociate) o desmarca la opción para desvincularla.
+-Haz clic en Guardar (Save) arriba a la izquierda y espera un par de minutos a que se aplique el cambio.
+
+
+2- Eliminar el recurso de la IP pública definitivamente:
+-Una vez desasociada, la IP pública sigue existiendo en tu cuenta (y Azure te la seguirá cobrando si está reservada y sin usar). Para borrarla por completo:
+-En el buscador de Azure, escribe Direcciones IP públicas (Public IP addresses) y entra allí.
+-Busca la IP pública que acabas de liberar en la lista.
+-Haz clic en ella y, en el menú superior, presiona el botón Eliminar (Delete).
+-Confirma la eliminación escribiendo "Sí" si te lo solicita.
+
+
+3- Instalar Azure CLI:
+-Instalar Azure CLI en Windows es sumamente sencillo y tienes dos formas rápidas de hacerlo.
+-Descarga el instalador de Azure CLI para Windows (64 bits).
+-Ejecuta el archivo descargado (suele llamarse azure-cli-X.X.X.msi).
+-Acepta los términos de licencia y haz clic en Instalar.
+-Te pedirá permisos de administrador; dale que Sí y espera a que termine de cargar la barra.
+-Para verificar que Windows ya reconoce la herramienta abre una nueva ventana de CMD o PowerShell.
+-Escribe el siguiente comando y presiona Enter:
+az --version
+
+-Si todo está correcto, la consola te devolverá la versión de azure-cli instalada junto con otros componentes.
+-Una vez instalado, el primer comando que debes ejecutar para conectarlo con tu cuenta de Azure es:
+az login
+
+-Esto abrirá automáticamente una ventana en tu navegador web para que inicies sesión con tu cuenta de Microsoft. Una vez que inicies sesión ahí, puedes cerrar la pestaña y tu terminal ya estará lista para administrar tu máquina virtual y tus IPs.
+
+
+4- Prender/Apagar la VM
+-De ahora en adelante deberás usar Azure CLI para prender y apagar tu VM mediante los archivos 'start-vm.ps1' y 'stop-vm.ps1'
+-Abre con un editor de texto el archivo start-vm.ps1 y cambia los siguientes valores que estan entre comillas("") por los de tu VM:
+$resourceGroup = "misifus-server_group_12270944" #Grupo
+$vmName = "misifus-server"     #Nombre de la VM
+$nicName = "misifus-server363" #Network Interface(NIC)
+$ipName = "ip-misifus"         #Nombre de la IP
+$location = "chilecentral"     #Locación la VM
+
+-Las demas líneas de ese archivo dejalas tal cual.
+
+-Ahora abre con un editor de texto el archivo stop-vm.ps1 y cambia los siguientes valores que estan entre comillas("") por los de tu VM: 
+$resourceGroup = "misifus-server_group_12270944"  #Grupo
+$vmName = "misifus-server"			#Nombre de la VM
+$nicName = "misifus-server363"		#Network Interface(NIC)
+$ipName = "ip-misifus"			#Nombre de la IP
+
+-Las demas líneas de ese archivo dejalas tal cual.
+-Guarda cambios en ambos archivos y ahora abre una terminal en tu PC apuntando a la carpeta donde tengas los archivos 'start-vm.ps1' y 'stop-vm.ps1'
+-Para prender la VM, escribe en la terminal:
+.\start-vm.ps1
+-Presiona enter, verás que empieza a iniciar su proceso de prender la VM en Azure y le asignará una IP pública, una vez terminado el proceso te mostrará la IP generada, tambien puedes fijarte la IP en la página de Azure.
+
+-Para apagar la VM, escribe en la terminal:
+.\stop-vm.ps1
+-Presiona enter para apagar la VM, este proceso eliminará la IP que se creó al usar 'start-vm.ps1'
+
+
+
+​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸
