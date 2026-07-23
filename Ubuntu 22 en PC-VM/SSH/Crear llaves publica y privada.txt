@@ -2,7 +2,7 @@
 1- En Windows abrir una terminal cmd y ejecutar:
 ssh-keygen -t ed25519 -C "mi-pc"
 
--Presiona Enter para guardarla en la ruta por defecto C:/Users/TU_USUARIO/.ssh/id_ed25519 (normalmente esta carpeta esta oculta, tienes que habilitar ver 'Elementos ocultos' en tu carpeta de tu TU_USUARIO
+-Presiona Enter para guardarla en la ruta por defecto C:/Users/TU_USUARIO/.ssh/id_ed25519 (normalmente esta carpeta esta oculta, tienes que habilitar ver 'Elementos ocultos' en la carpeta de tu TU_USUARIO)
 -Si quieres, puedes ponerle una contraseña (passphrase) para que, si alguien te roba la laptop, no pueda usar tu key.
 -Si le pusiste un passphrase, cada vez que hagas conexión por ssh con tu key, te pedirá ese passphrase para continuar.
 -Por defecto el nombre de las keys será algo como: id_ed25519
@@ -11,18 +11,21 @@ SI DESEAS PUEDES CAMBIARLE EL NOMBRE A LAS KEYS
 
 
 ***
-2- Pasar la key pública (el candado) a tu Ubuntu
--Ahora necesitas copiar el contenido de tu key pública (tu_key.pub) dentro de tu Ubuntu.
+2- Pasar la key pública (el candado) a tu usuario en Ubuntu:
+-Ahora necesitas copiar el contenido de tu key pública (tu_key.pub) a tu usuario en Ubuntu.
 -En Windows, ve a tu carpeta donde se generó tus keys, abre el archivo tu_key.pub con el Bloc de Notas y copia todo su contenido (es una sola línea de texto largo).
 -Abre una terminal cmd y conectate por SSH a tu maquina ubuntu:
 (Ejemplo)
 ssh ubuntu@192.168.18.94
 
--Una vez dentro de Ubuntu, crea la carpeta por si acaso y abre el archivo de llaves con el editor de texto con el siguiente comando:
+-Una vez dentro de tu usuaurio en Ubuntu, crea la carpeta por si acaso y abre el archivo de llaves con el editor de texto con el siguiente comando:
 mkdir -p ~/.ssh && nano ~/.ssh/authorized_keys
 
 -Te abrirá un editor de texto apuntando al archivo authorized_keys y ahí debes pegar el contenido de tu archivo tu_key.pub
 -Guarda los cambios presionando Ctrl + O, luego Enter para confirmar, y sal con Ctrl + X
+
+***IMPORTANTE
+-El archivo ~/.ssh/authorized_keys creado en el paso 2 sólo se crea en el usuario en el cual hiciste ese proceso, si tienes otro usuario (steam) debes repetir el proceso estando con la sesión de ese usuario. 
 
 
 **
@@ -33,7 +36,7 @@ Ejemplo:
 ssh -i /C:/Users/BILLY/.ssh/sv_l4d2 ubuntu@192.168.18.23
 
 -Verás que entra directamente y sin pedirte la contraseña de tu usuario (solo te pedirá la contraseña de la key si decidiste ponerle el passphrase).
--Tu key privada habrá abierto de forma segura el candado en tu Ubuntu.
+-Tu key privada habrá abierto de forma segura el candado de tu usuario de Ubuntu.
 
 
 ************ELIMINAR INGRESO SSH POR CONTRASEÑA PARA MAS SEGURIDAD (OPCIONAL)

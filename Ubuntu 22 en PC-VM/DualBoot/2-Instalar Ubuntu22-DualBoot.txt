@@ -16,8 +16,9 @@ INSTALACION UBUNTU 22
 1- Debe figurar la partición con los 30gb en 'AVAILABLE DEVICES'.
 2- Ubicarse en esa partición, presionar enter y 'edit'.
 3- En Format debes elegir 'ext4' y en Mount elegir '/' y dar save.
-4- Ahora en USED DEVICES debe figurar el disco 'dueño' de esa partición que creaste como tambien otra partición de 100-250mb y por último
-la partición de 30gb.
+4- Ahora en USED DEVICES debe figurar el disco 'dueño' de esa partición y los 30gb, como tambien la Partición del Sistema EFI (100-250mb) y su dueño.
+***IMPORTANTE: Si en caso tienes el sistema principal(windows) en el disco C pero la partición de 30gb la creaste en el disco D, al momento de haber hecho el paso 3 ahora debes ubicarte en el disco principal (C) en AVAILABLE DEVICES, presionar enter y se abrirá una ventana pequeña donde en una de las opciones debe decir "use as a boot device" o similar, presionar enter y verás lo indicado en el paso 4.
+
 5- En FILE SYSTEM SUMMARY debe figurar las particiones de 30gb y de 100-250mb.
 6- Dar done y continue en el aviso de confirmación.
 7- En profile configuration, en 'servers name' puedes dejarlo como 'ubuntu-server'. En username y password debes ponerlos como 'ubuntu', los demás campos puedes dejarlos como 'ubuntu', dar enter en 'done'.
@@ -27,9 +28,31 @@ la partición de 30gb.
 11- Una vez terminado dar en 'reboot now', la maquina se reinicirá.
 12- Si en caso despues de dar reboot sale [FAILED] Failed unmounting cdrom, solo presionar enter.
 13- Al reiniciar el ordenador te aparecerá el menu GRUB, escoge Ubuntu para arrancar ese sistema.
-**Si en caso se queda la pantalla en varios [OK] durante bastante tiempo (no avanza nada) y al presionar 'enter' no te manda al inicio para que hagas login, debes reiniciar el ordenador (mantener presionado el boton power)
-**Si en caso despues de dar reboot y arrancar Ubuntu te aparece los mensajes de [OK] pero se queda en algo como lo siguiente, debes reiniciar el ordenador (mantener presionado el boton power) :
+
+**Si en caso despues de dar reboot se queda la pantalla en varios [OK] durante bastante tiempo (no avanza nada) y al presionar 'enter' no te manda al inicio para que hagas login, debes reiniciar el ordenador (mantener presionado el boton power) y vuelve a arrancar ubuntu.
+
+**Si en caso despues de dar reboot te aparece los mensajes de [OK] pero se queda en algo como lo siguiente, debes reiniciar el ordenador (mantener presionado el boton power) y vuelve a arrancar ubuntu:
 watchdog: BUG: soft lockup - CPU#0 stuck for 25s! [kworker/0:2:189]
+
+*************************************************************************************************************
+**Si en caso despues de dar reboot y ves los mensajes de inicio del sistema pero la pantalla se apaga y se queda ahí, reinicia el ordenador:
+-En el menu GRUB ubicate en ubuntu, presiona 'e' y se abrirá una ventana con varios comandos.
+-Usa las flechas del teclado para ubicar la línea que comienza por linux (o linux /boot/vmlinuz...)
+-Al final de esa línea, o justo antes/después de quiet splash, escribe la palabra 'nomodeset' (Ejemplo: quiet splash nomodeset)
+-Presiona Ctrl + X o la tecla F10 para arrancar el sistema con esta configuración modificada.
+
+AHORA PARA QUE ESA CONFIGURACION SEA PERMANENTE DEBES:
+-En ubuntu ejecuta:
+sudo nano /etc/default/grub
+-Busca la línea que contiene GRUB_CMDLINE_LINUX_DEFAULT
+-Agrega 'nomodeset' dentro de las comillas:
+-GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nomodeset"
+-Guarda los cambios presionando Ctrl + O y presiona Enter. Luego sal con Ctrl + X
+-Aplica los cambios actualizando GRUB en el sistema con el comando:
+sudo update-grub
+-Reinicia el ordenador para certificar que inicia correctamente.
+-Nota importante: nomodeset desactiva la aceleración gráfica por hardware del kernel, por lo que la pantalla usará una resolución baja o genérica.
+*************************************************************************************************************
 
 -Una vez que se detuvo todos los mensajes de [OK], dar enter y nos mostrará una línea para dar login, ingresamos nuestro usuario y contraseña creado previamente (paso 7).
 
@@ -54,7 +77,7 @@ ssh-keygen -R 192.168.18.23
 Y Vuelve a intentar la conexión
 
 
-***ASIGNAR SUDO AL USUARIO
+***ASIGNAR SUDO AL USUARIO (Esto es opcional ya que normalmente el usuario creado en la instalación ya tiene permisos sudo)
 -Una vez iniciada la sesión con nuestro usuario, ejecutar:
 sudo usermod -aG sudo ubuntu
 

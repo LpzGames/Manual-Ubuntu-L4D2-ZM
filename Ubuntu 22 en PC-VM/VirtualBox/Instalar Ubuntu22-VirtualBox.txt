@@ -65,7 +65,7 @@ ssh-keygen -R 192.168.18.54
 Y Vuelve a intentar la conexión.
 
 
-***ASIGNAR SUDO AL USUARIO
+***ASIGNAR SUDO AL USUARIO (Esto es opcional ya que normalmente el usuario creado en la instalación ya tiene permisos sudo)
 -Una vez iniciada la sesión con nuestro usuario, ejecutar:
 sudo usermod -aG sudo ubuntu
 

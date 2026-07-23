@@ -251,6 +251,41 @@ app_update 222860 validate
 quit
 
 
+***
+16- COMANDOS ADMIN
+- Para usar nuestros comandos admin en el servidor L4D2 debemos ingresar en el chat del juego '!admin o /admin' y se abrirá una ventana con distintos comandos que podemos ejecutar en el juego.
+
+ATAJOS (debes ejecutar los siguientes comando en el chat del juego):
+-Kickea a un jugador de la partida (el nombre del jugador debes escribirlo exacto como tambien sólo escribir una parte de su nombre):
+!kick nombreJugador
+
+-Banear a un jugador del servidor:
+!ban <#userid|nombreJugador> <minutos|0> [razón]
+
+Banea un jugador por tiempo limitado o permanente (si pones 10, 60, etc serán los minutos de baneo, si pones 0 el baneo será permanente), indicar la razón es opcional. 
+
+Ejemplo:
+!ban NoobMaster69 0 uso de multihacks
+
+-En caso el jugador a banear tiene un nombre vacío o con carácteres raros, deberás abrir la consola del juego y escribir 'status', al ejecutarlo te mostrará los jugadores conectados en la partida (algo similar a lo siguiente):
+#  21 1 "jugador1" STEAM_1:1:104132302 13:29 23 0 active
+#  22 2 "jugador2" STEAM_1:1:104132302 13:29 23 0 active
+#  14 3 "jugador3" STEAM_1:1:104132302 13:29 23 0 active
+#  55 4 "jugador4" STEAM_1:1:104132302 13:29 23 0 active
+#  12 5 "☆☆☆☆" STEAM_1:1:104132302 13:29 23 0 active
+
+-Para banearlo debes usar su #userid el cual es el primer número de la izquierda(debes incluir el símbolo #), ejemplo:
+!ban #12 0 uso de multihacks
+
+-Para desbanear a un jugador debes ejecutar:
+!unban STEAM_ID_DEL_JUGADOR
+
+Ejemplo:
+!unban STEAM_1:1:104132302
+
+-Los usuarios baneados se guardan en el archivo ubicado en /cfg/banned_user.cfg 
+
+
 ***************************** INFO ADICIONAL*****************************
 ***CONECTARSE CON FILEZILLA PARA INSTALAR LOS ARCHIVOS A LA VM (OPCIONAL):
 -Poner la dns
@@ -287,6 +322,9 @@ Los cfgs de la carpeta \left4dead2\cfg\cfgogl\zonemod(u otra modalidad) son para
 ***
 ELIMINAR ARCHIVOS ESTANDO EN TU VM (ejemplo):
 sudo rm /home/steam/Steam/steamapps/common/l4d2/left4dead2/addons/sourcemod/plugins/Playerjoin.smx
+
+PARA ELIMINAR UNA CARPETA DE LA VM (ejemplo)::
+sudo rm -rf /home/steam/L4D2-Competitive-Rework-master
 
 
 ***

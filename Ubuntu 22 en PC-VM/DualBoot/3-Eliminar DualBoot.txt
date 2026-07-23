@@ -24,5 +24,46 @@ Ahora que el arranque está limpio, toca recuperar el espacio que le habías pre
 -Dale a Siguiente en el asistente para que absorba automáticamente esos 30 GB libres.
 
 
+*** IMPORTANTE
+3- Si luego de haber hecho el paso 1 y al reiniciar el ordenador sigue apareciendo el menu grub, significa que en la partición EFI de tu disco aún están los archivos para arrancar ubuntu lo cual algunas placas de los ordenadores detectan que existe ese loader y lo añade otra vez a la entrada de arranque.
+-Para solucionarlo de raíz, debes eliminar la carpeta física de Ubuntu de la partición EFI desde Windows:
+
+Paso 1: Establecer Windows Boot Manager como predeterminado
+- Inicia Windows
+- Para establecer Windows Boot Manager como predeterminado, abre una ventana cmd (como Administrador) y ejecuta:
+bcdedit /set {bootmgr} displayorder {default} /addfirst
+
+Paso 2: Borrar la carpeta de Ubuntu en la partición EFI
+-En la misma ventana cmd monta la partición EFI en una letra de unidad (por ejemplo, la S:) y ejecuta:
+mountvol S: /s
+
+-No mostrará algún cambio en la ventana (es normal), luego ejecuta:
+S:
+
+-Ejecuta lo siguiente:
+cd EFI
+
+-Ejecuta lo siguiente (Deberías ver carpetas como Microsoft, Boot, ubuntu, etc.):
+dir
+
+-Elimina completamente la carpeta de Ubuntu y todo su contenido:
+rmdir /s /q ubuntu
+
+Paso 3: Vuelve a la unidad principal y desmonta la partición:
+-Ejecuta:
+C:
+
+-Ejecuta:
+mountvol S: /d
+
+-Ejecuta lo siguiente, no debe figurar la entrada 'ubuntu':
+bcdedit /enum firmware
+
+-Si en caso aparece la entrada ubuntu, ejecuta lo siguiente para eliminarla:
+bcdedit /delete {el-identificador-largo-aquí}
+
+-Una vez hecho, reincia tu ordenador y verifica que inicie correctamente.
+
+
 
 ​ ฅ^>⩊<^ ฅ   🇲​​​​​🇮​​​​​🇸​​​​​🇮​​​​​🇫​​​​​🇺​​​​​🇸
